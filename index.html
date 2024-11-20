@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #444;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        label {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 600;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            border: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Centering the image */
+        #imagePreview {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .instructions {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emotion Detection from Image</h1>
+
+        <!-- Instructions for users -->
+        <p class="instructions">Upload an image of a face to predict the emotion (angry, happy, or sad).</p>
+
+        <!-- Form to upload image -->
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <label for="fileInput">Choose an image</label>
+            <div class="upload-btn-wrapper">
+                <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload Image</button>
+                <input type="file" name="file" id="fileInput" accept="image/*" onchange="previewImage()" required>
+            </div>
+
+            <!-- Image Preview -->
+            <img id="imagePreview" class="preview" src="#" alt="Image Preview" style="display: none;">
+
+            <br>
+            <button type="submit" class="upload-btn">Predict Emotion</button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="result" class="result"></div>
+
+        
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // Display image preview when a file is selected
+        function previewImage() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.style.display = "block";  // Show image preview
+                    imagePreview.src = e.target.result;   // Set image source to the uploaded file
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Form submission via JavaScript for async request
+        const form = document.querySelector("form");
+        form.onsubmit = async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            
+            const response = await fetch("/predict", {
+                method: "POST",
+                body: formData,
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById("result");
+
+            if (result.prediction !== undefined) {
+                resultDiv.innerHTML = `<h2>Prediction: ${result.prediction}</h2>`;
+            } else {
+                resultDiv.innerHTML = `<h2 class="error">Error: ${result.error}</h2>`;
+            }
+        };
+    </script>
+</body>
+</html>
