@@ -2,7 +2,7 @@
 
 This project involves the development of a machine learning model that can classify human emotions from text, speech, or images. The goal is to predict the emotional state of a person based on various input data such as text (e.g., tweets, reviews), speech (e.g., voice recordings), or images (e.g., facial expressions).
 
-![Emotion Detection Flow](images/accuracy.png)
+![Emotion Detection Flow](images/profile.png)
 
 
 Features
