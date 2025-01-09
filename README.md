@@ -49,7 +49,8 @@ Angry
 The model uses [VGG19 and many more], which is optimized for high accuracy and performance.
 
 Evaluation
-![alt text](Human-emotion-detection/images/Screenshot 2024-11-20 at 6.35.19 PM.png)
+![Emotion Detection Flow](images/profile.png)
+
 
 
 
